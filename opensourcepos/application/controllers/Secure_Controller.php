@@ -13,6 +13,7 @@ class Secure_Controller extends CI_Controller
 		$this->load->model('Employee');
 		$model = $this->Employee;
 
+		
 		if(!$model->is_logged_in())
 		{
 			redirect('login');

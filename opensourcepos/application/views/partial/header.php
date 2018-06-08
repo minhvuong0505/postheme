@@ -76,6 +76,7 @@
 		<!-- end mincss template tags -->
 		<!-- start minjs template tags -->
 		<script type="text/javascript" src="dist/opensourcepos.min.js?rel=6f405d80cf"></script>
+		<script type="text/javascript" src="dist/main.min.js?rel=6f405d80cf"></script>
 		<!-- end minjs template tags -->
 	<?php endif; ?>
 
@@ -109,34 +110,34 @@
 			</div>
 		</div>
 
-		<div class="navbar navbar-default" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-			
-					<a class="navbar-brand hidden-sm" href="<?php echo site_url(); ?>">OSPOS</a>
-				</div>
+		<div class="container" style='width:100%'>
+			<div class="row content">
+				<div class='col-sm-4 menu'>
+					<div class="navbar navbar-default" role="navigation">
+						<div class="container" style="width: 100%">
+							<div class="navbar-header" >
+								<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+									<span class="sr-only">Toggle navigation</span>
+									<span class="icon-bar"></span>
+									<span class="icon-bar"></span>
+									<span class="icon-bar"></span>
+								</button>
+							</div>
 
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav navbar-right">
-						<?php foreach($allowed_modules as $module): ?>
-							<li class="<?php echo $module->module_id == $this->uri->segment(1) ? 'active' : ''; ?>">
-								<a href="<?php echo site_url("$module->module_id"); ?>" title="<?php echo $this->lang->line("module_" . $module->module_id); ?>" class="menu-icon">
-									<img src="<?php echo base_url() . 'images/menubar/' . $module->module_id . '.png'; ?>" border="0" alt="Module Icon"/><br/>
-									<?php echo $this->lang->line("module_" . $module->module_id) ?>
-								</a>
-							</li>
-						<?php endforeach; ?>
-					</ul>
+							<div class="navbar-collapse collapse">
+								<ul class="nav navbar-nav navbar-right" style="width: 100%; margin-top: 30px;">
+									<?php foreach($allowed_modules as $module): ?>
+										<li class="<?php echo $module->module_id == $this->uri->segment(1) ? 'active' : ''; ?>">
+											<a href="<?php echo site_url("$module->module_id"); ?>" title="<?php echo $this->lang->line("module_" . $module->module_id); ?>" class="menu-icon">
+												<img src="<?php echo base_url() . 'images/menubar/' . $module->module_id . '.png'; ?>" border="0" alt="Module Icon"/><br/>
+												<?php echo $this->lang->line("module_" . $module->module_id) ?>
+											</a>
+										</li>
+									<?php endforeach; ?>
+								</ul>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
-
-		<div class="container">
-			<div class="row">
+				<div class='col-sm-8' >
 	 

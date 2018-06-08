@@ -144,7 +144,7 @@ class Sales extends Secure_Controller
 			}
 		}
 
-		$this->_reload();
+		header('Location: http://localhost/pos/public/sales/');
 	}
 
 	public function change_mode()
@@ -361,93 +361,121 @@ class Sales extends Secure_Controller
 		$this->_reload();
 	}
 
+	/*public function add(){
+		if($this->input->post('item')){
+			$item_id_or_number_or_item_kit_or_receipt = $this->input->post('item');
+			$this->add_item($item_id_or_number_or_item_kit_or_receipt);
+		}
+	}*/
+
+	/*public function search_code(){
+		$path_txt = 'data.txt';
+        $data_txt = @fopen($path_txt, "r");
+              
+        if (!$data_txt) {
+            $array = 'Mở file không thành công';
+        }else{
+            while(!feof($data_txt)){
+                $array = fgets($data_txt);
+            }
+            file_put_contents($path_txt,'');
+            file_put_contents('css/data.css','');                 
+        }
+        $this->add_item($array);
+        echo json_encode($array);
+	}*/
+
 	public function add()
-	{
-		$data = array();
+	{	
+		if($this->input->post('item') && $this->input->post('item') != null){
+			$data = array();
 
-		$discount = 0;
+			$discount = 0;
 
-		// check if any discount is assigned to the selected customer
-		$customer_id = $this->sale_lib->get_customer();
-		if($customer_id != -1)
-		{
-			// load the customer discount if any
-			$discount_percent = $this->Customer->get_info($customer_id)->discount_percent;
-			if($discount_percent != '')
+			// check if any discount is assigned to the selected customer
+			$customer_id = $this->sale_lib->get_customer();
+			if($customer_id != -1)
 			{
-				$discount = $discount_percent;
+				// load the customer discount if any
+				$discount_percent = $this->Customer->get_info($customer_id)->discount_percent;
+				if($discount_percent != '')
+				{
+					$discount = $discount_percent;
+				}
 			}
-		}
-
-		// if the customer discount is 0 or no customer is selected apply the default sales discount
-		if($discount == 0)
-		{
-			$discount = $this->config->item('default_sales_discount');
-		}
-
-		$item_id_or_number_or_item_kit_or_receipt = $this->input->post('item');
-		$this->barcode_lib->parse_barcode_fields($quantity, $item_id_or_number_or_item_kit_or_receipt);
-		$mode = $this->sale_lib->get_mode();
-		$quantity = ($mode == 'return') ? -$quantity : $quantity;
-		$item_location = $this->sale_lib->get_sale_location();
-
-		if($mode == 'return' && $this->Sale->is_valid_receipt($item_id_or_number_or_item_kit_or_receipt))
-		{
-			$this->sale_lib->return_entire_sale($item_id_or_number_or_item_kit_or_receipt);
-		}
-		elseif($this->Item_kit->is_valid_item_kit($item_id_or_number_or_item_kit_or_receipt))
-		{
-			// Add kit item to order if one is assigned
-			$pieces = explode(' ', $item_id_or_number_or_item_kit_or_receipt);
-			$item_kit_id = $pieces[1];
-			$item_kit_info = $this->Item_kit->get_info($item_kit_id);
-			$kit_item_id = $item_kit_info->kit_item_id;
-			$kit_price_option = $item_kit_info->price_option;
-			$kit_print_option = $item_kit_info->print_option; // 0-all, 1-priced, 2-kit-only
-
-			if($item_kit_info->kit_discount_percent != 0 && $item_kit_info->kit_discount_percent > $discount)
+			$item_id_or_number_or_item_kit_or_receipt = $this->input->post('item');
+			// if the customer discount is 0 or no customer is selected apply the default sales discount
+			if($discount == 0)
 			{
-				$discount = $item_kit_info->kit_discount_percent;
+				$discount = $this->config->item('default_sales_discount');
 			}
 
-			$price = NULL;
-			$print_option = PRINT_ALL; // Always include in list of items on invoice
+			$this->barcode_lib->parse_barcode_fields($quantity, $item_id_or_number_or_item_kit_or_receipt);
+			$mode = $this->sale_lib->get_mode();
+			$quantity = ($mode == 'return') ? -$quantity : $quantity;
+			$item_location = $this->sale_lib->get_sale_location();
 
-			if(!empty($kit_item_id))
+			if($mode == 'return' && $this->Sale->is_valid_receipt($item_id_or_number_or_item_kit_or_receipt))
 			{
-				if(!$this->sale_lib->add_item($kit_item_id, $quantity, $item_location, $discount, PRICE_MODE_STANDARD))
+				$this->sale_lib->return_entire_sale($item_id_or_number_or_item_kit_or_receipt);
+			}
+			elseif($this->Item_kit->is_valid_item_kit($item_id_or_number_or_item_kit_or_receipt))
+			{
+				// Add kit item to order if one is assigned
+				$pieces = explode(' ', $item_id_or_number_or_item_kit_or_receipt);
+				$item_kit_id = $pieces[1];
+				$item_kit_info = $this->Item_kit->get_info($item_kit_id);
+				$kit_item_id = $item_kit_info->kit_item_id;
+				$kit_price_option = $item_kit_info->price_option;
+				$kit_print_option = $item_kit_info->print_option; // 0-all, 1-priced, 2-kit-only
+
+				if($item_kit_info->kit_discount_percent != 0 && $item_kit_info->kit_discount_percent > $discount)
+				{
+					$discount = $item_kit_info->kit_discount_percent;
+				}
+
+				$price = NULL;
+				$print_option = PRINT_ALL; // Always include in list of items on invoice
+
+				if(!empty($kit_item_id))
+				{
+					if(!$this->sale_lib->add_item($kit_item_id, $quantity, $item_location, $discount, PRICE_MODE_STANDARD))
+					{
+						$data['error'] = $this->lang->line('sales_unable_to_add_item');
+					}
+					else
+					{
+						$data['warning'] = $this->sale_lib->out_of_stock($item_kit_id, $item_location);
+					}
+				}
+
+				// Add item kit items to order
+				$stock_warning = NULL;
+				if(!$this->sale_lib->add_item_kit($item_id_or_number_or_item_kit_or_receipt, $item_location, $discount, $kit_price_option, $kit_print_option, $stock_warning))
+				{
+					$data['error'] = $this->lang->line('sales_unable_to_add_item');
+				}
+				elseif($stock_warning != NULL)
+				{
+					$data['warning'] = $stock_warning;
+				}
+			}
+			else
+			{
+				if(!$this->sale_lib->add_item($item_id_or_number_or_item_kit_or_receipt, $quantity, $item_location, $discount, PRICE_MODE_STANDARD))
 				{
 					$data['error'] = $this->lang->line('sales_unable_to_add_item');
 				}
 				else
 				{
-					$data['warning'] = $this->sale_lib->out_of_stock($item_kit_id, $item_location);
+					$data['warning'] = $this->sale_lib->out_of_stock($item_id_or_number_or_item_kit_or_receipt, $item_location);
 				}
 			}
-
-			// Add item kit items to order
-			$stock_warning = NULL;
-			if(!$this->sale_lib->add_item_kit($item_id_or_number_or_item_kit_or_receipt, $item_location, $discount, $kit_price_option, $kit_print_option, $stock_warning))
-			{
-				$data['error'] = $this->lang->line('sales_unable_to_add_item');
-			}
-			elseif($stock_warning != NULL)
-			{
-				$data['warning'] = $stock_warning;
-			}
+			//$this->_reload($data);
+			header('Location: http://localhost/pos/public/sales/');
+		}else{
+			header('Location: http://localhost/pos/public/sales/');
 		}
-		else
-		{
-			if(!$this->sale_lib->add_item($item_id_or_number_or_item_kit_or_receipt, $quantity, $item_location, $discount, PRICE_MODE_STANDARD))
-			{
-				$data['error'] = $this->lang->line('sales_unable_to_add_item');
-			}
-			else
-			{
-				$data['warning'] = $this->sale_lib->out_of_stock($item_id_or_number_or_item_kit_or_receipt, $item_location);
-			}
-		}
-		$this->_reload($data);
 	}
 
 	public function edit_item($item_id)
@@ -483,8 +511,8 @@ class Sales extends Secure_Controller
 	public function delete_item($item_number)
 	{
 		$this->sale_lib->delete_item($item_number);
-
-		$this->_reload();
+		header('Location: http://localhost/pos/public/sales/');
+		//$this->_reload('sales');
 	}
 
 	public function remove_customer()
@@ -1387,6 +1415,7 @@ class Sales extends Secure_Controller
 
 		return $filtered_cart;
 	}
+
 }
 
 ?>

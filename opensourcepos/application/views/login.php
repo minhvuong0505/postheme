@@ -38,12 +38,10 @@
 					}
 					?>
 
-					<input class="btn btn-primary btn-block" type="submit" name="loginButton" value="Go"/>
+					<input class="btn btn-primary btn-block" type="submit" name="loginButton" value="Login"/>
 				</div>
 			</div>
 		<?php echo form_close(); ?>
-
-		<h1>Open Source Point Of Sale <?php echo $this->config->item('application_version'); ?></h1>
 
 	</div>
 </body>

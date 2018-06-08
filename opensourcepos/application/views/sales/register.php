@@ -86,13 +86,13 @@ if(isset($success))
 					<label for="item" class='control-label'><?php echo $this->lang->line('sales_find_or_scan_item_or_receipt'); ?></label>
 				</li>
 				<li class="pull-left">
-					<?php echo form_input(array('name'=>'item', 'id'=>'item', 'class'=>'form-control input-sm', 'size'=>'50', 'tabindex'=>++$tabindex)); ?>
+					<?php echo form_input(array('autofocus'=>'autofocus', 'name'=>'item', 'id'=>'item', 'class'=>'form-control input-sm', 'size'=>'50', 'tabindex'=>++$tabindex)); ?>
 					<span class="ui-helper-hidden-accessible" role="status"></span>
 				</li>
 				<li class="pull-right">
 					<button id='new_item_button' class='btn btn-info btn-sm pull-right modal-dlg' data-btn-new='<?php echo $this->lang->line('common_new') ?>' data-btn-submit='<?php echo $this->lang->line('common_submit')?>' data-href='<?php echo site_url("items/view"); ?>'
 							title='<?php echo $this->lang->line($controller_name . '_new_item'); ?>'>
-						<span class="glyphicon glyphicon-tag">&nbsp</span><?php echo $this->lang->line($controller_name. '_new_item'); ?>
+						<?php echo $this->lang->line($controller_name. '_new_item'); ?>
 					</button>
 				</li>
 			</ul>
@@ -146,7 +146,7 @@ if(isset($success))
 							if($items_module_allowed)
 							{
 							?>
-								<td><?php echo form_input(array('name'=>'price', 'class'=>'form-control input-sm', 'value'=>to_currency_no_money($item['price']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));?></td>
+								<td><?php echo form_input(array('name'=>'price','disabled'=>'disabled', 'class'=>'form-control input-sm', 'value'=>to_currency_no_money($item['price']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));?></td>
 							<?php
 							}
 							else
@@ -848,6 +848,32 @@ function check_payment_type()
 		$(".non-giftcard-input").attr('disabled', false);
 	}
 }
+/*setInterval(function abc(){
+var xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+    	var a = xhr.responseText.length;
+    	if(a > 0){  
+			$.ajax({
+				url: 'sales/search_code',
+				type: 'POST',
+			})
+			.done(function(data) {
+				window.location.href = './sales';
+			})
+			.fail(function() {
+					console.log("error");
+			})
+			.always(function() {
+				console.log("complete");
+			});
+		}
+    }
+}
+xhr.open("GET", "css/data.css", false);
+xhr.send();
+},1000)*/
+
 </script>
 
 <?php $this->load->view("partial/footer"); ?>
