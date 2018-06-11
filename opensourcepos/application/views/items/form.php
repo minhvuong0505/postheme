@@ -244,7 +244,6 @@
 						);?>
 			</div>
 		</div>
-
 		<div class="form-group form-group-sm">
 			<?php echo form_label($this->lang->line('items_reorder_level'), 'reorder_level', array('class'=>'required control-label col-xs-3')); ?>
 			<div class='col-xs-4'>
@@ -256,6 +255,56 @@
 						);?>
 			</div>
 		</div>
+
+		<!-------------------------------- Khuyễn mại ---------------------------------->
+
+		<div class="form-group form-group-sm">
+			<?php echo form_label($this->lang->line('promotion'), 'tax_percent_2', array('class'=>'control-label col-xs-3')); ?>
+			<div class='col-xs-4'>
+				<div class="input-group input-group-sm">
+					<span class="input-group-addon input-sm" style="padding: 6px 3px !important"><b><?php echo $this->lang->line('start') ?></b></span>
+					<?php echo form_date(array(
+							'name'=>'promotion_day_start',
+							'class'=>'form-control input-sm input-day',
+							'id'=>'promotion_day_start',
+							'value'=>$item_info->promotion_day_start != NULL ? date('Y-m-d',$item_info->promotion_day_start) : NULL)
+							);?>
+				</div>
+			</div>
+			<div class="col-xs-4">
+				<div class="input-group input-group-sm">
+					<span class="input-group-addon input-sm" style="padding: 6px 3px !important"><b><?php echo $this->lang->line('end') ?></b></span>
+					<?php echo form_date(array(
+							'name'=>'promotion_day_end',
+							'class'=>'form-control input-sm input-day',
+							'id'=>'promotion_day_end',
+							'value'=>$item_info->promotion_day_end != NULL ? date('Y-m-d',$item_info->promotion_day_end) : NULL)
+							);?>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group form-group-sm">
+			<?php echo form_label($this->lang->line('promotion_price'), 'promotion_price', array('class'=>' control-label col-xs-3')); ?>
+			<div class="col-xs-4">
+				<div class="input-group input-group-sm">
+					<?php if (!currency_side()): ?>
+						<span class="input-group-addon input-sm"><b><?php echo $this->config->item('currency_symbol'); ?></b></span>
+					<?php endif; ?>
+					<?php echo form_input(array(
+							'name'=>'promotion_price',
+							'id'=>'price_promotion',
+							'class'=>'form-control input-sm',
+							'value'=>isset($item_info->promotion_price) ? $item_info->promotion_price : '1000')
+							);?>
+					<?php if (currency_side()): ?>
+						<span class="input-group-addon input-sm"><b><?php echo $this->config->item('currency_symbol'); ?></b></span>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+
+		<!-------------------------------- End Khuyễn mại ---------------------------------->
 
 		<div class="form-group form-group-sm">
 			<?php echo form_label($this->lang->line('items_description'), 'description', array('class'=>'control-label col-xs-3')); ?>

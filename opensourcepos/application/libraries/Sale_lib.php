@@ -700,7 +700,14 @@ class Sale_lib
 
 		if($price_mode == PRICE_MODE_STANDARD)
 		{
-			$price = $item_info->unit_price;
+			if($item_info->promotion_price != NULL && $item_info->promotion_day_start != NULL && $item_info->promotion_day_end != NULL){
+				if(($item_info->promotion_day_start <= strtotime(date('m/d/y'))) && (strtotime(date('m/d/y')) <= $item_info->promotion_day_end))
+					$price = $item_info->promotion_price;
+				else
+					$price = $item_info->unit_price;
+			}
+			else
+				$price = $item_info->unit_price;
 			$cost_price = $item_info->cost_price;
 		}
 		elseif($price_mode == PRICE_MODE_KIT)

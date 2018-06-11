@@ -102,5 +102,10 @@ $lang["items_unit_price"] = "Giá bán lẻ";
 $lang["items_unit_price_number"] = "Giá bán lẻ mỗi đơn vị phải là dạng số.";
 $lang["items_unit_price_required"] = "Trường giá bán lẻ là bắt buộc.";
 $lang["items_upc_database"] = "Cơ sở dữ liệu mã vạch";
-$lang["items_update"] = "Cập nhật Hàng hóa";
+$lang["items_update"] = "Cập Nhật Hàng hóa";
 $lang["items_use_inventory_menu"] = "Dùng trình đơn Tồn kho";
+
+$lang["promotion"] = "Thời Gian Khuyến Mại";
+$lang["start"] = "Start";
+$lang["end"] = "End";
+$lang["promotion_price"] = "Giá Khuyến Mại";

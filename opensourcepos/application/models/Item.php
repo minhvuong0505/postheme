@@ -125,6 +125,9 @@ class Item extends CI_Model
 			$this->db->select('MAX(items.pic_filename) as pic_filename');
 			$this->db->select('MAX(items.allow_alt_description) as allow_alt_description');
 			$this->db->select('MAX(items.is_serialized) as is_serialized');
+			$this->db->select('MAX(items.promotion_day_start) as promotion_day_start');
+			$this->db->select('MAX(items.promotion_day_end) as promotion_day_end');
+			$this->db->select('MAX(items.promotion_price) as promotion_price');
 			$this->db->select('MAX(items.deleted) as deleted');
 			$this->db->select('MAX(items.custom1) as custom1');
 			$this->db->select('MAX(items.custom2) as custom2');
