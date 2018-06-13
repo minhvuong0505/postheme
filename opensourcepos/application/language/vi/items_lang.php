@@ -109,3 +109,4 @@ $lang["promotion"] = "Thời Gian Khuyến Mại";
 $lang["start"] = "Start";
 $lang["end"] = "End";
 $lang["promotion_price"] = "Giá Khuyến Mại";
+$lang["condition_cost_price"] = "Điều Kiện Bán Buôn";

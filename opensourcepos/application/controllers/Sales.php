@@ -19,6 +19,7 @@ class Sales extends Secure_Controller
 
 	public function index()
 	{
+		
 		$this->_reload();
 	}
 
@@ -460,35 +461,40 @@ class Sales extends Secure_Controller
 	{
 		if($this->input->post('price') || $this->input->post('quantity') || $this->input->post('discount')){
 
-			$item_info = $this->Item->get_info_by_id_or_number($this->input->post('barcode'));
-			/*echo '<pre>';
-			print_r($item_info);*/
+			$items_id = $this->input->post('barcode');
+
+			$item_info = $this->Item->get_info_by_id_or_number($items_id);
+
 			$data = array();
 
 			$this->form_validation->set_rules('price', 'lang:sales_price', 'required|callback_numeric');
 			$this->form_validation->set_rules('quantity', 'lang:sales_quantity', 'required|callback_numeric');
-			$this->form_validation->set_rules('discount', 'lang:sales_discount', 'required|callback_numeric');
+			//$this->form_validation->set_rules('discount', 'lang:sales_discount', 'required|callback_numeric');
 
-			if($item_info->promotion_day_start != null && $item_info->promotion_day_end && $item_info->promotion_price){
-				if(($item_info->promotion_day_start <= strtotime(date('m/d/y'))) && (strtotime(date('m/d/y')) <= $item_info->promotion_day_end)){
-					$price = $item_info->promotion_price;
+			$quantity = parse_decimals($this->input->post('quantity'));
+
+			if($item_info->condition_cost_price <= $quantity && $item_info->condition_cost_price != NULL){
+				$price = $item_info->cost_price;
+			}else{
+				if($item_info->promotion_day_start && $item_info->promotion_day_end && $item_info->promotion_price){
+					if(($item_info->promotion_day_start <= strtotime(date('m/d/y'))) && (strtotime(date('m/d/y')) <= $item_info->promotion_day_end)){
+						$price = $item_info->promotion_price;
+					}else{
+						$price = parse_decimals($item_info->unit_price);
+					}
 				}else{
 					$price = parse_decimals($item_info->unit_price);
 				}
-			}else{
-				$price = parse_decimals($item_info->unit_price);
 			}
-			
 			$description = $this->input->post('description');
 			$serialnumber = $this->input->post('serialnumber');
-			$quantity = parse_decimals($this->input->post('quantity'));
 			$discount = parse_decimals($this->input->post('discount'));
 			$item_location = $this->input->post('location');
 			$discounted_total = $this->input->post('discounted_total') != '' ? $this->input->post('discounted_total') : NULL;
 
 			if($this->form_validation->run() != FALSE)
 			{
-				$this->sale_lib->edit_item($item_id, $description, $serialnumber, $quantity, $discount, $price, $discounted_total);
+				$this->sale_lib->edit_item($item_id, $description, $serialnumber, $quantity, $discount, $price, $discounted_total, $items_id);
 			}
 			else
 			{

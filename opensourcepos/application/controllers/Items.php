@@ -377,6 +377,7 @@ class Items extends Secure_Controller
 			'promotion_day_end' => $this->input->post('promotion_day_end') == '' ? NULL : strtotime($this->input->post('promotion_day_end')),
 			'promotion_price' => $this->input->post('promotion_price') == '' ? NULL : $this->input->post('promotion_price'),
 			'cost_price' => parse_decimals($this->input->post('cost_price')),
+			'condition_cost_price' => $this->input->post('condition_cost_price') == '' ? NULL : $this->input->post('condition_cost_price'),
 			'unit_price' => parse_decimals($this->input->post('unit_price')),
 			'reorder_level' => parse_decimals($this->input->post('reorder_level')),
 			'receiving_quantity' => parse_decimals($this->input->post('receiving_quantity')),

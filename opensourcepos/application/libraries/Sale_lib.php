@@ -441,7 +441,7 @@ class Sale_lib
 			$total_discount = bcadd($total_discount, $discount_amount);
 
 			$extended_amount = $this->get_extended_amount($item['quantity'], $item['price']);
-			$extended_discounted_amount = $this->get_extended_amount($item['quantity'], $item['price'], $discount_amount);
+			$extended_discounted_amount = $item['discounted_total'];
 			$prediscount_subtotal= bcadd($prediscount_subtotal, $extended_amount);
 			$total = bcadd($total, $extended_discounted_amount);
 
@@ -458,6 +458,8 @@ class Sale_lib
 		$totals['prediscount_subtotal'] = $prediscount_subtotal;
 		$totals['total_discount'] = $total_discount;
 		$totals['subtotal'] = $subtotal;
+
+		/*sádasdasdsadasasasasasasasasasasasasasasasasasasasasasaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/
 
 		if($this->CI->config->item('tax_included'))
 		{
@@ -482,6 +484,8 @@ class Sale_lib
 			$cash_total = $total;
 			$totals['cash_total'] = $cash_total;
 		}
+
+		/*sádasdasdsadasasasasasasasasasasasasasasasasasasasasasaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/
 
 		$payment_total = $this->get_payments_total();
 		$totals['payment_total'] = $payment_total;
@@ -699,7 +703,7 @@ class Sale_lib
 		$stock_type = $item_info->stock_type;
 
 		if($price_mode == PRICE_MODE_STANDARD)
-		{
+		{	
 			if($item_info->promotion_price != NULL && $item_info->promotion_day_start != NULL && $item_info->promotion_day_end != NULL){
 				if(($item_info->promotion_day_start <= strtotime(date('m/d/y'))) && (strtotime(date('m/d/y')) <= $item_info->promotion_day_end))
 					$price = $item_info->promotion_price;
@@ -782,6 +786,7 @@ class Sale_lib
 				{
 					$quantity = bcadd($quantity, $items[$updatekey]['quantity']);
 				}
+				$discount = $item['discount'];
 			}
 		}
 
@@ -818,9 +823,11 @@ class Sale_lib
 				$print_option_selected = PRINT_YES;
 			}
 		}
+		if($item_info->condition_cost_price <= $quantity && $item_info->condition_cost_price != '')
+			$price = $item_info->cost_price;
 
 		$total = $this->get_item_total($quantity, $price, $discount);
-		$discounted_total = $this->get_item_total($quantity, $price, $discount, TRUE);
+		$discounted_total = $this->get_item_total($quantity, $price, $discount, TRUE, $item_id);
 		//Item already exists and is not serialized, add to quantity
 		if(!$itemalreadyinsale || $item_info->is_serialized)
 		{
@@ -920,7 +927,7 @@ class Sale_lib
 		return -1;
 	}
 
-	public function edit_item($line, $description, $serialnumber, $quantity, $discount, $price, $discounted_total=NULL)
+	public function edit_item($line, $description, $serialnumber, $quantity, $discount, $price, $discounted_total=NULL, $items_id)
 	{
 		$items = $this->get_cart();
 		if(isset($items[$line]))
@@ -937,7 +944,7 @@ class Sale_lib
 			$line['discount'] = $discount;
 			$line['price'] = $price;
 			$line['total'] = $this->get_item_total($quantity, $price, $discount);
-			$line['discounted_total'] = $this->get_item_total($quantity, $price, $discount, TRUE);
+			$line['discounted_total'] = $this->get_item_total($quantity, $price, $discount, TRUE, $items_id);
 			$this->set_cart($items);
 		}
 
@@ -1216,16 +1223,23 @@ class Sale_lib
 		return $discounted_extended_amount;
 	}
 
-	public function get_item_total($quantity, $price, $discount_percentage, $include_discount = FALSE)
+	public function get_item_total($quantity, $price, $discount_percentage, $include_discount = FALSE, $item_id = FALSE)
 	{
-		$total = bcmul($quantity, $price);
+		$items = $this->CI->Item->get_info_by_id_or_number($item_id);
+		
+		if(!empty($items))
+			if($items->condition_cost_price <= $quantity && $items->condition_cost_price != NULL)
+				$total = ($quantity % $items->condition_cost_price) * $items->unit_price + $items->condition_cost_price * $items->cost_price * floor($quantity / $items->condition_cost_price);
+			else
+				$total = bcmul($quantity, $price);
+		else
+			$total = bcmul($quantity, $price);
 		if($include_discount)
 		{
-			$discount_amount = $this->get_item_discount($quantity, $price, $discount_percentage);
+			$discount_amount = $this->get_item_discount($quantity, $price, $discount_percentage, $item_id);
 
 			return bcsub($total, $discount_amount);
 		}
-
 		return $total;
 	}
 
@@ -1250,9 +1264,18 @@ class Sale_lib
 		return bcsub($extended_amount, $discount_amount);
 	}
 
-	public function get_item_discount($quantity, $price, $discount_percentage)
+	public function get_item_discount($quantity, $price, $discount_percentage, $item_id = FALSE)
 	{
-		$total = bcmul($quantity, $price);
+		$items = $this->CI->Item->get_info_by_id_or_number($item_id);
+		
+		if(!empty($items))
+			if($items->condition_cost_price <= $quantity && $items->condition_cost_price != NULL)
+				$total = ($quantity % $items->condition_cost_price) * $items->unit_price + $items->condition_cost_price * $items->cost_price;
+			else
+				$total = bcmul($quantity, $price);
+		else
+			$total = bcmul($quantity, $price);
+
 		$discount_fraction = bcdiv($discount_percentage, 100);
 
 		return round(bcmul($total, $discount_fraction), totals_decimals(), PHP_ROUND_HALF_UP);

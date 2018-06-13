@@ -41,12 +41,12 @@
 	<li role="presentation">
 		<a data-toggle="tab" href="#message_tab" title="<?php echo $this->lang->line('config_message_configuration'); ?>"><?php echo $this->lang->line('config_message'); ?></a>
 	</li>
-	<li role="presentation">
+<!-- 	<li role="presentation">
 		<a data-toggle="tab" href="#mailchimp_tab" title="<?php echo $this->lang->line('config_mailchimp_configuration'); ?>"><?php echo $this->lang->line('config_mailchimp'); ?></a>
 	</li>
 	<li role="presentation">
 		<a data-toggle="tab" href="#license_tab" title="<?php echo $this->lang->line('config_license_configuration'); ?>"><?php echo $this->lang->line('config_license'); ?></a>
-	</li>
+	</li> -->
 </ul>
 
 <div class="tab-content">
