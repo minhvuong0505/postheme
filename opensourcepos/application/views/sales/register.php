@@ -130,10 +130,12 @@ if(isset($success))
 			}
 			else
 			{
-				foreach(array_reverse($cart, TRUE) as $line=>$item)
+
+				foreach(array_reverse($cart, TRUE) as $line=>$item)				
 				{
 			?>
-					<?php echo form_open($controller_name."/edit_item/$line", array('class'=>'form-horizontal', 'id'=>'cart_'.$line)); ?>
+					<?php echo form_open($controller_name."/edit_item/$line", array('class'=>'form-horizontal', 'id'=>'cart_'.$line)); 
+						echo form_input(array('name'=>'barcode', 'class'=>'form-control input-sm', 'value'=>$item['item_id'], 'tabindex'=>++$tabindex, 'onClick'=>'this.select();', 'style'=>'display: none;') );?>
 						<tr>
 							<td><?php echo anchor($controller_name."/delete_item/$line", '<span class="glyphicon glyphicon-trash"></span>');?></td>
 							<td><?php echo $item['item_number']; ?></td>
@@ -146,7 +148,7 @@ if(isset($success))
 							if($items_module_allowed)
 							{
 							?>
-								<td><?php echo form_input(array('name'=>'price','disabled'=>'disabled', 'class'=>'form-control input-sm', 'value'=>to_currency_no_money($item['price']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));?></td>
+								<td><?php echo form_input(array('name'=>'price', 'class'=>'form-control input-sm', 'value'=>to_currency_no_money($item['price']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();','readonly'=>'readonly'));?></td>
 							<?php
 							}
 							else

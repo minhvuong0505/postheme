@@ -104,3 +104,10 @@ $lang["items_unit_price_required"] = "Retail Price is a required field.";
 $lang["items_upc_database"] = "Barcode Database";
 $lang["items_update"] = "Update Item";
 $lang["items_use_inventory_menu"] = "Use Inventory Menu";
+
+$lang["promotion"] = "Promotion time";
+$lang["start"] = "Start";
+$lang["end"] = "End";
+$lang["promotion_price"] = "Promotion price";
+$lang["condition_cost_price"] = "Condition wholesale Price";
+

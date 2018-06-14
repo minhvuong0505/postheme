@@ -5,7 +5,7 @@
 <?php echo form_open('items/save/'.$item_info->item_id, array('id'=>'item_form', 'enctype'=>'multipart/form-data', 'class'=>'form-horizontal')); ?>
 	<fieldset id="item_basic_info">
 		<div class="form-group form-group-sm">
-			<?php echo form_label($this->lang->line('items_item_number'), 'item_number', array('class'=>'control-label col-xs-3')); ?>
+			<?php echo form_label($this->lang->line('items_item_number'), 'item_number', array('class'=>'required control-label col-xs-3')); ?>
 			<div class='col-xs-8'>
 				<div class="input-group">
 					<span class="input-group-addon input-sm"><span class="glyphicon glyphicon-barcode"></span></span>
@@ -120,7 +120,7 @@
 		</div>
 
 		<div class="form-group form-group-sm">
-			<?php echo form_label($this->lang->line('items_cost_price'), 'cost_price', array('class'=>'required control-label col-xs-3')); ?>
+			<?php echo form_label($this->lang->line('items_cost_price'), 'cost_price', array('class'=>'control-label col-xs-3')); ?>
 			<div class="col-xs-4">
 				<div class="input-group input-group-sm">
 					<?php if (!currency_side()): ?>
@@ -131,6 +131,24 @@
 							'id'=>'cost_price',
 							'class'=>'form-control input-sm',
 							'value'=>to_currency_no_money($item_info->cost_price))
+							);?>
+					<?php if (currency_side()): ?>
+						<span class="input-group-addon input-sm"><b><?php echo $this->config->item('currency_symbol'); ?></b></span>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group form-group-sm">
+			<?php echo form_label($this->lang->line('condition_cost_price'), 'condition_cost_price', array('class'=>'control-label col-xs-3')); ?>
+			<div class="col-xs-4">
+				<div class="input-group input-group-sm">
+					<?php echo form_input(array(
+							'name'=>'condition_cost_price',
+							'id'=>'condition_cost_price',
+							'class'=>'form-control input-sm',
+							'placeholder'=>'Quantity',
+							'value'=>isset($item_info->condition_cost_price) ? $item_info->condition_cost_price : '')
 							);?>
 					<?php if (currency_side()): ?>
 						<span class="input-group-addon input-sm"><b><?php echo $this->config->item('currency_symbol'); ?></b></span>
@@ -244,7 +262,6 @@
 						);?>
 			</div>
 		</div>
-
 		<div class="form-group form-group-sm">
 			<?php echo form_label($this->lang->line('items_reorder_level'), 'reorder_level', array('class'=>'required control-label col-xs-3')); ?>
 			<div class='col-xs-4'>
@@ -256,6 +273,56 @@
 						);?>
 			</div>
 		</div>
+
+		<!-------------------------------- Khuyễn mại ---------------------------------->
+
+		<div class="form-group form-group-sm">
+			<?php echo form_label($this->lang->line('promotion'), 'tax_percent_2', array('class'=>'control-label col-xs-3')); ?>
+			<div class='col-xs-4'>
+				<div class="input-group input-group-sm">
+					<span class="input-group-addon input-sm" style="padding: 6px 3px !important"><b><?php echo $this->lang->line('start') ?></b></span>
+					<?php echo form_date(array(
+							'name'=>'promotion_day_start',
+							'class'=>'form-control input-sm input-day',
+							'id'=>'promotion_day_start',
+							'value'=>$item_info->promotion_day_start != NULL ? date('Y-m-d',$item_info->promotion_day_start) : NULL)
+							);?>
+				</div>
+			</div>
+			<div class="col-xs-4">
+				<div class="input-group input-group-sm">
+					<span class="input-group-addon input-sm" style="padding: 6px 3px !important"><b><?php echo $this->lang->line('end') ?></b></span>
+					<?php echo form_date(array(
+							'name'=>'promotion_day_end',
+							'class'=>'form-control input-sm input-day',
+							'id'=>'promotion_day_end',
+							'value'=>$item_info->promotion_day_end != NULL ? date('Y-m-d',$item_info->promotion_day_end) : NULL)
+							);?>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group form-group-sm">
+			<?php echo form_label($this->lang->line('promotion_price'), 'promotion_price', array('class'=>' control-label col-xs-3')); ?>
+			<div class="col-xs-4">
+				<div class="input-group input-group-sm">
+					<?php if (!currency_side()): ?>
+						<span class="input-group-addon input-sm"><b><?php echo $this->config->item('currency_symbol'); ?></b></span>
+					<?php endif; ?>
+					<?php echo form_input(array(
+							'name'=>'promotion_price',
+							'id'=>'price_promotion',
+							'class'=>'form-control input-sm',
+							'value'=>isset($item_info->promotion_price) ? $item_info->promotion_price : '')
+							);?>
+					<?php if (currency_side()): ?>
+						<span class="input-group-addon input-sm"><b><?php echo $this->config->item('currency_symbol'); ?></b></span>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+
+		<!-------------------------------- End Khuyễn mại ---------------------------------->
 
 		<div class="form-group form-group-sm">
 			<?php echo form_label($this->lang->line('items_description'), 'description', array('class'=>'control-label col-xs-3')); ?>

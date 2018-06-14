@@ -19,6 +19,7 @@ class Sales extends Secure_Controller
 
 	public function index()
 	{
+		
 		$this->_reload();
 	}
 
@@ -361,33 +362,11 @@ class Sales extends Secure_Controller
 		$this->_reload();
 	}
 
-	/*public function add(){
-		if($this->input->post('item')){
-			$item_id_or_number_or_item_kit_or_receipt = $this->input->post('item');
-			$this->add_item($item_id_or_number_or_item_kit_or_receipt);
-		}
-	}*/
-
-	/*public function search_code(){
-		$path_txt = 'data.txt';
-        $data_txt = @fopen($path_txt, "r");
-              
-        if (!$data_txt) {
-            $array = 'Mở file không thành công';
-        }else{
-            while(!feof($data_txt)){
-                $array = fgets($data_txt);
-            }
-            file_put_contents($path_txt,'');
-            file_put_contents('css/data.css','');                 
-        }
-        $this->add_item($array);
-        echo json_encode($array);
-	}*/
 
 	public function add()
 	{	
 		if($this->input->post('item') && $this->input->post('item') != null){
+
 			$data = array();
 
 			$discount = 0;
@@ -428,7 +407,6 @@ class Sales extends Secure_Controller
 				$kit_item_id = $item_kit_info->kit_item_id;
 				$kit_price_option = $item_kit_info->price_option;
 				$kit_print_option = $item_kit_info->print_option; // 0-all, 1-priced, 2-kit-only
-
 				if($item_kit_info->kit_discount_percent != 0 && $item_kit_info->kit_discount_percent > $discount)
 				{
 					$discount = $item_kit_info->kit_discount_percent;
@@ -471,8 +449,9 @@ class Sales extends Secure_Controller
 					$data['warning'] = $this->sale_lib->out_of_stock($item_id_or_number_or_item_kit_or_receipt, $item_location);
 				}
 			}
-			//$this->_reload($data);
-			header('Location: http://localhost/pos/public/sales/');
+
+			$this->_reload($data);
+			//header('Location: http://localhost/pos/public/sales/');
 		}else{
 			header('Location: http://localhost/pos/public/sales/');
 		}
@@ -480,32 +459,55 @@ class Sales extends Secure_Controller
 
 	public function edit_item($item_id)
 	{
-		$data = array();
+		if($this->input->post('price') || $this->input->post('quantity') || $this->input->post('discount')){
 
-		$this->form_validation->set_rules('price', 'lang:sales_price', 'required|callback_numeric');
-		$this->form_validation->set_rules('quantity', 'lang:sales_quantity', 'required|callback_numeric');
-		$this->form_validation->set_rules('discount', 'lang:sales_discount', 'required|callback_numeric');
+			$items_id = $this->input->post('barcode');
 
-		$description = $this->input->post('description');
-		$serialnumber = $this->input->post('serialnumber');
-		$price = parse_decimals($this->input->post('price'));
-		$quantity = parse_decimals($this->input->post('quantity'));
-		$discount = parse_decimals($this->input->post('discount'));
-		$item_location = $this->input->post('location');
-		$discounted_total = $this->input->post('discounted_total') != '' ? $this->input->post('discounted_total') : NULL;
+			$item_info = $this->Item->get_info_by_id_or_number($items_id);
 
-		if($this->form_validation->run() != FALSE)
-		{
-			$this->sale_lib->edit_item($item_id, $description, $serialnumber, $quantity, $discount, $price, $discounted_total);
+			$data = array();
+
+			$this->form_validation->set_rules('price', 'lang:sales_price', 'required|callback_numeric');
+			$this->form_validation->set_rules('quantity', 'lang:sales_quantity', 'required|callback_numeric');
+			//$this->form_validation->set_rules('discount', 'lang:sales_discount', 'required|callback_numeric');
+
+			$quantity = parse_decimals($this->input->post('quantity'));
+
+			if($item_info->condition_cost_price <= $quantity && $item_info->condition_cost_price != NULL){
+				$price = $item_info->cost_price;
+			}else{
+				if($item_info->promotion_day_start && $item_info->promotion_day_end && $item_info->promotion_price){
+					if(($item_info->promotion_day_start <= strtotime(date('m/d/y'))) && (strtotime(date('m/d/y')) <= $item_info->promotion_day_end)){
+						$price = $item_info->promotion_price;
+					}else{
+						$price = parse_decimals($item_info->unit_price);
+					}
+				}else{
+					$price = parse_decimals($item_info->unit_price);
+				}
+			}
+			$description = $this->input->post('description');
+			$serialnumber = $this->input->post('serialnumber');
+			$discount = parse_decimals($this->input->post('discount'));
+			$item_location = $this->input->post('location');
+			$discounted_total = $this->input->post('discounted_total') != '' ? $this->input->post('discounted_total') : NULL;
+
+			if($this->form_validation->run() != FALSE)
+			{
+				$this->sale_lib->edit_item($item_id, $description, $serialnumber, $quantity, $discount, $price, $discounted_total, $items_id);
+			}
+			else
+			{
+				$data['error'] = $this->lang->line('sales_error_editing_item');
+			}
+
+			$data['warning'] = $this->sale_lib->out_of_stock($this->sale_lib->get_item_id($item_id), $item_location);
+			
+			$this->_reload($data);
+
+		}else{
+			header('Location: http://localhost/pos/public/sales/');
 		}
-		else
-		{
-			$data['error'] = $this->lang->line('sales_error_editing_item');
-		}
-
-		$data['warning'] = $this->sale_lib->out_of_stock($this->sale_lib->get_item_id($item_id), $item_location);
-
-		$this->_reload($data);
 	}
 
 	public function delete_item($item_number)

@@ -12,9 +12,28 @@ class ComposerStaticInitd9186b49ad9fc4bb0d807e4adb517762
     );
 
     public static $prefixLengthsPsr4 = array (
+        'Z' => 
+        array (
+            'Zend\\Validator\\' => 15,
+            'Zend\\Uri\\' => 9,
+            'Zend\\Stdlib\\' => 12,
+            'Zend\\Soap\\' => 10,
+            'Zend\\Server\\' => 12,
+            'Zend\\EventManager\\' => 18,
+            'Zend\\Escaper\\' => 13,
+            'Zend\\Code\\' => 10,
+        ),
         'T' => 
         array (
             'Tamtamchik\\NameCase\\' => 20,
+        ),
+        'P' => 
+        array (
+            'Psr\\Container\\' => 14,
+        ),
+        'I' => 
+        array (
+            'Interop\\Container\\' => 18,
         ),
         'D' => 
         array (
@@ -24,9 +43,49 @@ class ComposerStaticInitd9186b49ad9fc4bb0d807e4adb517762
     );
 
     public static $prefixDirsPsr4 = array (
+        'Zend\\Validator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-validator/src',
+        ),
+        'Zend\\Uri\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-uri/src',
+        ),
+        'Zend\\Stdlib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-stdlib/src',
+        ),
+        'Zend\\Soap\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-soap/src',
+        ),
+        'Zend\\Server\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-server/src',
+        ),
+        'Zend\\EventManager\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-eventmanager/src',
+        ),
+        'Zend\\Escaper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-escaper/src',
+        ),
+        'Zend\\Code\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-code/src',
+        ),
         'Tamtamchik\\NameCase\\' => 
         array (
             0 => __DIR__ . '/..' . '/tamtamchik/namecase/src',
+        ),
+        'Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Interop\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
         ),
         'Dotenv\\' => 
         array (

@@ -80,5 +80,6 @@ $route['reports/specific_customer'] = 'reports/specific_customer_input';
 $route['reports/specific_employee'] = 'reports/specific_employee_input';
 $route['reports/specific_discount'] = 'reports/specific_discount_input';
 
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
