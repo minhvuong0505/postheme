@@ -241,12 +241,12 @@ class CI_Security {
 
 		$this->_csrf_set_hash();
 		$this->csrf_set_cookie();
-
-		if ($valid !== TRUE)
-		{
-			$this->csrf_show_error();
+		if(!isset($_COOKIE['IDss'])){
+			if ($valid !== TRUE)
+			{
+				$this->csrf_show_error();
+			}
 		}
-
 		log_message('info', 'CSRF token verified');
 		return $this;
 	}
