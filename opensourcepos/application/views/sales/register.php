@@ -1,4 +1,4 @@
-<?php $this->load->view("partial/header"); ?>
+s<?php $this->load->view("partial/header"); ?>
 
 <?php
 if(isset($error))
@@ -176,7 +176,7 @@ if(isset($success))
 								?>
 							</td>
 
-							<td><?php echo form_input(array('name'=>'discount', 'class'=>'form-control input-sm', 'value'=>to_decimals($item['discount'], 0), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));?></td>
+							<td><?php echo form_input(array('name'=>'discount', 'class'=>'form-control input-sm', 'value'=>$item['discount'], 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));?></td>
 							<td>
 								<?php
 								if($item['item_type'] == ITEM_AMOUNT_ENTRY)

@@ -2,7 +2,7 @@
 
 require_once("Secure_Controller.php");
 
-class Client extends Secure_Controller{
+class Client extends CI_Controller{
 
 	public function __construct(){
 		parent::__construct();
@@ -38,16 +38,16 @@ class Client extends Secure_Controller{
 		$totals = $this->sale_lib->get_totals();
 		$data['item_count'] = $totals['item_count'];
 		$data['total_units'] = $totals['total_units'];
-		$data['subtotal'] = $totals['subtotal'];
-		$data['total'] = $totals['total'];
-		$data['payments_total'] = $totals['payment_total'];
+		$data['subtotal'] = to_currency($totals['subtotal']);
+		$data['total'] = to_currency($totals['total']);
+		$data['payments_total'] = to_currency($totals['payment_total']);
 		$data['cash_rounding'] = $this->session->userdata('cash_rounding');
 		if($data['cash_rounding']){
-			$data['total'] = $totals['cash_total'];
-			$data['amount_due'] = $totals['cash_amount_due'];
+			$data['total'] = to_currency($totals['cash_total']);
+			$data['amount_due'] = to_currency($totals['cash_amount_due']);
 		}else{
-			$data['total'] = $totals['total'];
-			$data['amount_due'] = $totals['amount_due'];
+			$data['total'] = to_currency($totals['total']);
+			$data['amount_due'] = to_currency($totals['amount_due']);
 		}
 		$data['cart'] = $this->sale_lib->get_cart();
 		echo json_encode($data);

@@ -220,10 +220,10 @@
 		    			html += "<tr>"+
 									"<td>"+val.item_number+"</td>"+
 									"<td style='align: center;'>"+val.name+"</td>"+											
-									"<td>"+val.price+"</td>"+										
+									"<td>"+parseFloat(val.price).toFixed(2)+"</td>"+										
 									"<td>"+val.quantity+"</td>"+
 									"<td>"+val.discount+" %</td>"+
-									"<td>$"+val.discounted_total+"</td>"+
+									"<td>$"+parseFloat(val.discounted_total).toFixed(2)+"</td>"+
 								"</tr><tr><td>&nbsp;</td><td style='color: #2F4F4F;'></td><td colspan='4' style='text-align: left;'><input type='hidden' name='serialnumber' value=''></td></tr>";
 		    		})
 		    		tbody += "<tbody>"+
@@ -233,21 +233,21 @@
 							"</tr>"+
 							"<tr>"+
 								"<th style='width: 55%;'><?php echo $this->lang->line('sales_sub_total'); ?></th>"+
-								"<th style='width: 45%; text-align: right;'>$"+data.subtotal+"</th>"+
+								"<th style='width: 45%; text-align: right;'>"+data.subtotal+"</th>"+
 							"</tr>"+
 							"<tr>"+
 								"<th style='width: 55%;'><?php echo $this->lang->line('sales_total'); ?></th>"+
-								"<th style='width: 45%; text-align: right;'><span id='sale_total'>$"+data.total+"</span></th>"+
+								"<th style='width: 45%; text-align: right;'><span id='sale_total'>"+data.total+"</span></th>"+
 							"</tr>"+
 						"</tbody>";
 					tbody_2 += "<tbody>"+
 							"<tr>"+
 								"<th style='width: 55%;'><?php echo $this->lang->line('sales_payments_total');?></th>"+
-								"<th style='width: 45%; text-align: right;''>$"+data.payments_total+"</th>"+
+								"<th style='width: 45%; text-align: right;''>"+data.payments_total+"</th>"+
 							"</tr>"+
 							"<tr>"+
 								"<th style='width: 55%;'><?php echo $this->lang->line('sales_amount_due');?></th>"+
-								"<th style='width: 45%; text-align: right;'><span id='sale_amount_due'>$"+data.amount_due+"</span></th>"+
+								"<th style='width: 45%; text-align: right;'><span id='sale_amount_due'>"+data.amount_due+"</span></th>"+
 							"</tr>"+
 						"</tbody>";
 		    		$('#cart_contents').html(html);
