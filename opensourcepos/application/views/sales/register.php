@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <?php $this->load->view("partial/headersales"); ?>
+=======
+<?php $this->load->view("partial/header"); ?>
+>>>>>>> 4aceef4e3cdbc0bd5dd55f3bb770f61c251cc488
 
 <?php
 if(isset($error))

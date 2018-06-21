@@ -496,8 +496,8 @@ class CI_Upload {
 			$this->file_size = round($this->file_size/1024, 2);
 		}
 
-		// Is the file size within the allowed maximum?
-		if ( ! $this->is_allowed_filesize())
+		// Is the file size within the allowed maximum? 
+		/*if ( ! $this->is_allowed_filesize())
 		{
 			$this->set_error('upload_invalid_filesize', 'info');
 			return FALSE;
@@ -509,7 +509,7 @@ class CI_Upload {
 		{
 			$this->set_error('upload_invalid_dimensions', 'info');
 			return FALSE;
-		}
+		}*/
 
 		// Sanitize the file name for security
 		$this->file_name = $this->_CI->security->sanitize_filename($this->file_name);
