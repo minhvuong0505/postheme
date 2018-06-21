@@ -15,6 +15,7 @@ class Sales extends Secure_Controller
 		$this->load->library('barcode_lib');
 		$this->load->library('email_lib');
 		$this->load->library('token_lib');
+		$this->load->library('item_lib');
 	}
 
 	public function index()
@@ -1009,9 +1010,43 @@ class Sales extends Secure_Controller
 		return $this->xss_clean($data);
 	}
 
+	public function pagination(){
+
+		$page = $this->input->get('page');
+		$record = ($page - 1) * 9; 
+		$items = $this->Item->get_all_items($record)->result();
+
+		echo json_encode($items);
+	}
+
+	public function get_category(){
+
+		$category = $this->input->get('category');
+		$data = $this->Item->get_catagory($category)->result();
+		echo json_encode($data);
+	}	
+
 	private function _reload($data = array())
-	{
+	{	
+
+		$obj = new stdClass();
+
+		$a =  [];
+		$items = $this->Item->get_all_items(0)->result();
+
+		$data['Total'] = count($this->Item->get_all_items()->result())/9;
+
+		foreach($items as $key){
+
+		 	$a[] = $obj->item = $key;
+		}
+
+		$data ['items'] = json_encode($a);
+		
+		$data['category'] = json_encode($this->Item->get_catagory(1)->result());
+
 		$sale_id = $this->session->userdata('sale_id');
+
 		if($sale_id == '')
 		{
 			$sale_id = -1;
