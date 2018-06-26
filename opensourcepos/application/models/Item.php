@@ -276,6 +276,35 @@ class Item extends CI_Model
 		return $this->db->get();
 	}
 
+	public function get_all_items($limit = -1){
+
+		$this->db->from('items');
+		$this->db->join('suppliers', 'suppliers.person_id = items.supplier_id', 'left');
+		if($limit >= 0){
+
+			$this->db->limit(9,$limit);
+		}
+
+		$this->db->where('items.deleted', 0);
+
+		// order by name of item
+		$this->db->order_by('items.name', 'asc');
+
+
+		return $this->db->get();
+	}
+
+	public function get_catagory($key){
+		$this->db->from('items');
+		if($key == 1){
+			$this->db->select('category');
+			$this->db->distinct();
+		}else {
+			$this->db->like('category',$key);
+		}
+		$this->db->where('deleted',0);
+		return $this->db->get();
+	}
 	/*
 	Gets information about a particular item
 	*/
@@ -605,7 +634,7 @@ class Item extends CI_Model
 		}
 
 		//only return $limit suggestions
-		if(count($suggestions > $limit))
+		if(count($suggestions) > $limit)
 		{
 			$suggestions = array_slice($suggestions, 0, $limit);
 		}

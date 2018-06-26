@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+<?php $this->load->view("partial/headersales"); ?>
+=======
 <?php $this->load->view("partial/header"); ?>
+>>>>>>> 4aceef4e3cdbc0bd5dd55f3bb770f61c251cc488
 
 <?php
 if(isset($error))
@@ -815,6 +819,11 @@ $(document).ready(function()
 	$('[name="price"],[name="quantity"],[name="discount"],[name="description"],[name="serialnumber"],[name="discounted_total"]').change(function() {
 		$(this).parents("tr").prevAll("form:first").submit()
 	});
+
+	$('.pagination li a').click( () => {
+		$('.pagination li').addClass('active').siblings().removeClass('active');
+	});
+
 });
 
 function check_payment_type()
@@ -850,32 +859,90 @@ function check_payment_type()
 		$(".non-giftcard-input").attr('disabled', false);
 	}
 }
-/*setInterval(function abc(){
-var xhr = new XMLHttpRequest();
-xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-    	var a = xhr.responseText.length;
-    	if(a > 0){  
-			$.ajax({
-				url: 'sales/search_code',
-				type: 'POST',
-			})
-			.done(function(data) {
-				window.location.href = './sales';
-			})
-			.fail(function() {
-					console.log("error");
-			})
-			.always(function() {
-				console.log("complete");
-			});
-		}
-    }
+function submit_form(bar_code){
+	$('#item').val(bar_code);
+	$("#add_item_form").submit();
 }
-xhr.open("GET", "css/data.css", false);
-xhr.send();
-},1000)*/
 
+function func_get_item(page){
+
+	var html = '';
+
+	var tg = new Date();
+	var time = parseInt(tg.getTime()/1000);
+
+	$.ajax({
+		url: 'sales/pagination',
+		type: 'get',
+		data: {page: page},
+	})
+	.done(function(data) {
+		console.log(data);
+		$.each(JSON.parse(data), function(key, val){
+				html += "<div class='col-md-4 col-sm-6 col-xs-6 pro-loop'>"+	
+							"<div class='product-block product-resize fixheight'>"+
+								'<div class="product-img image-resize view view-third">'+
+						 			'<a href="javascript:submit_form('+val.item_number+')" title="Jumpsuit In Họa Tiết 5243">'+
+						 				'<img class="first-image  has-img" alt=" Jumpsuit In Họa Tiết 5243 " src="../public/uploads/item_pics/'+val.pic_filename+'">'+
+						 			'</a>'+
+						 		'</div>'+
+						 		'<div class="product-detail clearfix">'+
+									'<h3 class="pro-name"><a href="javascript:submit_form('+val.item_number+')" title="">'+val.name+'</a></h3>'+
+						 			'<div class="pro-prices">';
+						 					if(val.promotion_day_start <= time && time <= val.promotion_day_end){
+												html += '<span class="pro-price" ><del style="color: #e81e1e">$'+val.unit_price+'</del></span>&nbsp&nbsp&nbsp<span class="pro-price">$'+val.promotion_price+'</span>';
+											}else{
+												html += '<p class="pro-price">$'+val.unit_price+'</p>';
+											}
+						 				html +='<p class="pro-price-del text-left"></p>'+
+						 			'</div>'+
+						 		'</div>'+
+							"</div>"+
+						"</div>";
+						
+		})
+		$('#navigation').html(html);
+	})
+}
+
+function get_item(name){
+
+	var html ='';
+	var tg = new Date();
+	var time = parseInt(tg.getTime()/1000);
+	
+	$.ajax({
+		url: 'sales/get_category',
+		type: 'get',
+		data: {category: name},
+	}).done(function(data) {
+		console.log(data);
+		$.each(JSON.parse(data), function(key, val){
+				html += "<div class='col-md-4 col-sm-6 col-xs-6 pro-loop'>"+	
+							"<div class='product-block product-resize fixheight'>"+
+								'<div class="product-img image-resize view view-third">'+
+						 			'<a href="javascript:submit_form('+val.item_number+')" title="Jumpsuit In Họa Tiết 5243">'+
+						 				'<img class="first-image  has-img" alt=" Jumpsuit In Họa Tiết 5243 " src="../public/uploads/item_pics/'+val.pic_filename+'">'+
+						 			'</a>'+
+						 		'</div>'+
+						 		'<div class="product-detail clearfix">'+
+									'<h3 class="pro-name"><a href="javascript:submit_form('+val.item_number+')" title="">'+val.name+'</a></h3>'+
+						 			'<div class="pro-prices">';
+						 					if(val.promotion_day_start <= time && time <= val.promotion_day_end){
+												html += '<span class="pro-price" ><del style="color: #e81e1e">$'+val.unit_price+'</del></span>&nbsp&nbsp&nbsp<span class="pro-price">$'+val.promotion_price+'</span>';
+											}else{
+												html += '<p class="pro-price">$'+val.unit_price+'</p>';
+											}
+						 				html +='<p class="pro-price-del text-left"></p>'+
+						 			'</div>'+
+						 		'</div>'+
+							"</div>"+
+						"</div>";
+						
+		})
+		$('#navigation').html(html);
+	})
+}
 </script>
 
 <?php $this->load->view("partial/footer"); ?>
